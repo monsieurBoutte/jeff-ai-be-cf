@@ -2,6 +2,8 @@
 
 A robust backend service powered by Cloudflare Workers that provides API endpoints for native applications. This service leverages the edge computing capabilities of Cloudflare to deliver fast, reliable, and secure API responses worldwide.
 
+base template started from [hono-open-api-starter](https://github.com/w3cj/hono-node-deployment-examples/tree/main/cloudflare-example)
+
 ## Important Notice
 
 - This open-source version is provided as-is, without any guarantee of future updates or maintenance
