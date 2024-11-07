@@ -1,6 +1,6 @@
 # Cloudflare Worker API
 
-A robust backend service powered by Cloudflare Workers that provides API endpoints for native applications. This service leverages the edge computing capabilities of Cloudflare to deliver fast, reliable, and secure API responses worldwide.
+Hey there! 👋 Welcome to the Cloudflare Worker API, this repository is a collection of fast and secure APIs. With Cloudflare Workers, our APIs are supercharged to deliver speedy responses no matter where our users are in the world.
 
 base template started from [hono-open-api-starter](https://github.com/w3cj/hono-node-deployment-examples/tree/main/cloudflare-example)
 
@@ -25,8 +25,15 @@ base template started from [hono-open-api-starter](https://github.com/w3cj/hono-
 - Node.js (v18 or higher)
 - pnpm package manager
 - Cloudflare account
+- Turso account
+- Turso CLI installed (`npm install -g turso`)
 - Wrangler CLI installed (`npm install -g wrangler`)
 
 ### Installation
 
 1. Clone the repository
+2. Install dependencies: `pnpm install`
+3. Create a `.env` file and via: `cp .env.sample .env`
+4. Create a `.dev.vars` file and via: `cp .env.sample .dev.vars`
+5. Run the dev database: `pnpm dev:db`
+6. In another terminal, run the dev server: `pnpm dev`
