@@ -88,11 +88,10 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
   const { db } = createDb(c.env);
   const { id } = c.req.valid("param");
-  const [deleted] = await db.delete(tasks)
-    .where(eq(tasks.id, id))
-    .returning();
+  const result = await db.delete(tasks)
+    .where(eq(tasks.id, id));
 
-  if (!deleted) {
+  if (result.rowsAffected === 0) {
     return c.json(
       {
         message: HttpStatusPhrases.NOT_FOUND,

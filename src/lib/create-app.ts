@@ -28,7 +28,3 @@ export default function createApp() {
   app.onError(onError);
   return app;
 }
-
-export function createTestApp<R extends AppOpenAPI>(router: R) {
-  return createApp().route("/", router);
-}

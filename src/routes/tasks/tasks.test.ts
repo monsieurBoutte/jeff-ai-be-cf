@@ -188,7 +188,7 @@ describe("tasks routes", () => {
     }
   });
 
-  it.only("delete /tasks/{id} removes a task", async () => {
+  it("delete /tasks/{id} removes a task", async () => {
     const response = await client.tasks[":id"].$delete({
       param: {
         id,
