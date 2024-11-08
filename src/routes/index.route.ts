@@ -20,7 +20,7 @@ const router = createRouter()
     }),
     (c) => {
       return c.json({
-        message: "Jeff AI API on Cloudflare",
+        message: "Jeff AI API on Cloudflare!",
       }, HttpStatusCodes.OK);
     },
   );
