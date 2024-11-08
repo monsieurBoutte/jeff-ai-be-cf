@@ -13,14 +13,14 @@ const router = createRouter()
       path: "/",
       responses: {
         [HttpStatusCodes.OK]: jsonContent(
-          createMessageObjectSchema("Tasks API"),
-          "Tasks API Index",
+          createMessageObjectSchema("Jeff AI API"),
+          "Jeff AI API Index",
         ),
       },
     }),
     (c) => {
       return c.json({
-        message: "Tasks API on Cloudflare",
+        message: "Jeff AI API on Cloudflare",
       }, HttpStatusCodes.OK);
     },
   );
