@@ -5,7 +5,7 @@ import { defaultHook } from "stoker/openapi";
 import { parseEnv } from "@/env";
 import { pinoLogger } from "@/middlewares/pino-logger";
 
-import type { AppBindings, AppOpenAPI } from "./types";
+import type { AppBindings } from "./types";
 
 export function createRouter() {
   return new OpenAPIHono<AppBindings>({
@@ -21,7 +21,7 @@ export default function createApp() {
     c.env = parseEnv(Object.assign(c.env || {}, process.env));
     return next();
   });
-  app.use(serveEmojiFavicon("📝"));
+  app.use(serveEmojiFavicon("🤘"));
   app.use(pinoLogger());
 
   app.notFound(notFound);

@@ -9,7 +9,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     openapi: "3.0.0",
     info: {
       version: packageJSON.version,
-      title: "Tasks API",
+      title: "Jeff AI API",
     },
   });
 
@@ -17,7 +17,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     "/reference",
     apiReference({
       theme: "kepler",
-      layout: "classic",
+      layout: "modern",
       defaultHttpClient: {
         targetKey: "javascript",
         clientKey: "fetch",
