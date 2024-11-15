@@ -9,17 +9,6 @@ import {
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 
-import env from "@/env-runtime";
-
-// Client for authorization code flow
-export const kindeClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
-  authDomain: env.KINDE_ISSUER_BASE_URL,
-  clientId: env.KINDE_CLIENT_ID,
-  clientSecret: env.KINDE_SECRET,
-  redirectURL: env.KINDE_REDIRECT_URL,
-  logoutRedirectURL: env.KINDE_SITE_URL,
-});
-
 export function sessionManager(c: Context): SessionManager {
   return {
     async getSessionItem(key: string) {
@@ -58,6 +47,7 @@ interface Env {
 
 export const getUser = createMiddleware<Env>(async (c, next) => {
   try {
+    const kindeClient = createKindeClient(c);
     const manager = sessionManager(c);
     const isAuthenticated = await kindeClient.isAuthenticated(manager);
     if (!isAuthenticated) {
@@ -72,3 +62,14 @@ export const getUser = createMiddleware<Env>(async (c, next) => {
     return c.json({ error: "Unauthorized" }, 401);
   }
 });
+
+export function createKindeClient(c: Context) {
+  const env = c.env;
+  return createKindeServerClient(GrantType.AUTHORIZATION_CODE, {
+    authDomain: env.KINDE_ISSUER_BASE_URL,
+    clientId: env.KINDE_CLIENT_ID,
+    clientSecret: env.KINDE_SECRET,
+    redirectURL: env.KINDE_REDIRECT_URL,
+    logoutRedirectURL: env.KINDE_SITE_URL,
+  });
+}
