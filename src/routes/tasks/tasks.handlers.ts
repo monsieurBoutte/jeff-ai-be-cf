@@ -11,12 +11,22 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+  }
+
   const { db } = createDb(c.env);
   const tasks = await db.query.tasks.findMany();
-  return c.json(tasks);
+  return c.json(tasks, HttpStatusCodes.OK);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+  }
+
   const { db } = createDb(c.env);
   const task = c.req.valid("json");
   const [inserted] = await db.insert(tasks).values(task).returning();
@@ -24,6 +34,11 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 };
 
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+  }
+
   const { db } = createDb(c.env);
   const { id } = c.req.valid("param");
   const task = await db.query.tasks.findFirst({
@@ -45,6 +60,11 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+  }
+
   const { db } = createDb(c.env);
   const { id } = c.req.valid("param");
   const updates = c.req.valid("json");
@@ -86,6 +106,11 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 };
 
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
+  }
+
   const { db } = createDb(c.env);
   const { id } = c.req.valid("param");
   const result = await db.delete(tasks)

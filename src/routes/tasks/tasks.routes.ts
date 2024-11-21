@@ -5,17 +5,25 @@ import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
 import { notFoundSchema } from "@/lib/constants";
+import { getUser } from "@/lib/kinde";
 
 const tags = ["Tasks"];
 
 export const list = createRoute({
   path: "/tasks",
   method: "get",
+  middleware: [getUser],
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       z.array(selectTasksSchema),
       "The list of tasks",
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
     ),
   },
 });
@@ -23,6 +31,7 @@ export const list = createRoute({
 export const create = createRoute({
   path: "/tasks",
   method: "post",
+  middleware: [getUser],
   request: {
     body: jsonContentRequired(
       insertTasksSchema,
@@ -39,12 +48,19 @@ export const create = createRoute({
       createErrorSchema(insertTasksSchema),
       "The validation error(s)",
     ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
+    ),
   },
 });
 
 export const getOne = createRoute({
   path: "/tasks/{id}",
   method: "get",
+  middleware: [getUser],
   request: {
     params: IdParamsSchema,
   },
@@ -62,12 +78,19 @@ export const getOne = createRoute({
       createErrorSchema(IdParamsSchema),
       "Invalid id error",
     ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
+    ),
   },
 });
 
 export const patch = createRoute({
   path: "/tasks/{id}",
   method: "patch",
+  middleware: [getUser],
   request: {
     params: IdParamsSchema,
     body: jsonContentRequired(
@@ -90,12 +113,19 @@ export const patch = createRoute({
         .or(createErrorSchema(IdParamsSchema)),
       "The validation error(s)",
     ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
+    ),
   },
 });
 
 export const remove = createRoute({
   path: "/tasks/{id}",
   method: "delete",
+  middleware: [getUser],
   request: {
     params: IdParamsSchema,
   },
@@ -111,6 +141,12 @@ export const remove = createRoute({
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),
       "Invalid id error",
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
     ),
   },
 });
