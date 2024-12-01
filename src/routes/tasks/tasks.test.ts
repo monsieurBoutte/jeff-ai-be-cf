@@ -50,6 +50,7 @@ describe("tasks routes", () => {
       json: {
         name,
         done: false,
+        userId: "1",
       },
     });
     expect(response.status).toBe(200);

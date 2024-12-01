@@ -41,6 +41,9 @@ dependencies:
   hono-pino:
     specifier: ^0.3.0
     version: 0.3.0(hono@4.6.9)(pino@9.5.0)
+  jose:
+    specifier: ^5.9.6
+    version: 5.9.6
   pino:
     specifier: ^9.4.0
     version: 9.5.0
