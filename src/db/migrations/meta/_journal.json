@@ -8,6 +8,13 @@
       "when": 1732192466516,
       "tag": "0000_wild_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1733083632283,
+      "tag": "0001_striped_nico_minoru",
+      "breakpoints": true
     }
   ]
 }

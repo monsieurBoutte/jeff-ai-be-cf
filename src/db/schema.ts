@@ -18,7 +18,7 @@ export const users = sqliteTable("users", {
 export const tasks = sqliteTable("tasks", {
   id: integer("id", { mode: "number" })
     .primaryKey({ autoIncrement: true }),
-  name: text("name")
+  task: text("task")
     .notNull(),
   done: integer("done", { mode: "boolean" })
     .notNull()
@@ -67,7 +67,7 @@ export const selectTasksSchema = createSelectSchema(tasks);
 export const insertTasksSchema = createInsertSchema(
   tasks,
   {
-    name: schema => schema.name.min(1).max(500),
+    task: schema => schema.task.min(1).max(500),
   },
 ).required({
   done: true,
