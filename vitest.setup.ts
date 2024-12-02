@@ -2,6 +2,8 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import { afterAll, beforeAll, vi } from "vitest";
 
+import { mockUser } from "./test-mocks";
+
 beforeAll(async () => {
   // Remove any existing test database
   fs.rmSync("test.db", { force: true });
@@ -16,13 +18,7 @@ beforeAll(async () => {
       ...actual,
       getUser: vi.fn().mockImplementation(async (c, next) => {
         // Mock setting the user in the context
-        c.set("user", {
-          id: "foo",
-          given_name: "Test",
-          family_name: "User",
-          email: "test@example.com",
-          picture: "https://example.com/avatar.jpg",
-        });
+        c.set("user", mockUser);
         // Call next to continue the middleware chain
         await next();
       }),

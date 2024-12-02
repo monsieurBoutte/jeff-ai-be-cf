@@ -1,5 +1,7 @@
 import type { Context } from "hono";
 
+import { createDb } from "@/db";
+import { users } from "@/db/schema";
 import { createKindeClient, sessionManager } from "@/lib/kinde";
 
 export async function login(c: Context) {
@@ -15,9 +17,6 @@ export async function register(c: Context) {
 }
 
 export async function callback(c: Context) {
-  // this gets called after the user is authenticated via login or register
-  // todo add a check to see if the user is already in the database
-  // if not, add them
   const kindeClient = createKindeClient(c);
   const url = new URL(c.req.url);
   await kindeClient.handleRedirectToApp(sessionManager(c), url);
@@ -36,4 +35,38 @@ export async function me(c: Context) {
     return c.json({ error: "Unauthorized" }, 401);
   }
   return c.json({ user }, 200);
+}
+
+export async function capture(c: Context) {
+  const user = c.var.user;
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const { db } = createDb(c.env);
+  // Check if user exists in database
+  const existingUser = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.authUserId, user.id),
+  });
+
+  if (existingUser) {
+    return c.json({
+      message: "User already exists",
+      user: existingUser,
+    }, 200);
+  }
+
+  // Create new user
+  const [newUser] = await db.insert(users)
+    .values({
+      email: user.email,
+      displayName: `${user.given_name} ${user.family_name}`.trim(),
+      authUserId: user.id,
+    })
+    .returning();
+
+  return c.json({
+    message: "User created successfully",
+    user: newUser,
+  }, 202);
 }

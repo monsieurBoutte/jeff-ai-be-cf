@@ -5,6 +5,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent } from "stoker/openapi/helpers";
 import { z } from "zod";
 
+import { selectUsersSchema } from "@/db/schema";
 import { getUser } from "@/lib/kinde";
 
 const tags = ["Auth"];
@@ -98,8 +99,38 @@ export const me = createRoute({
   },
 });
 
+export const capture = createRoute({
+  method: "post",
+  path: "/capture",
+  middleware: [getUser],
+  tags,
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      z.object({
+        message: z.string(),
+        user: selectUsersSchema,
+      }),
+      "User already exists",
+    ),
+    [HttpStatusCodes.ACCEPTED]: jsonContent(
+      z.object({
+        message: z.string(),
+        user: selectUsersSchema,
+      }),
+      "User created successfully",
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized error response",
+    ),
+  },
+});
+
 export type LoginRoute = typeof login;
 export type RegisterRoute = typeof register;
 export type CallbackRoute = typeof callback;
 export type LogoutRoute = typeof logout;
 export type MeRoute = typeof me;
+export type CaptureRoute = typeof capture;
