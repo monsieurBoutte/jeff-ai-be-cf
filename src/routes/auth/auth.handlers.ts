@@ -1,5 +1,7 @@
 import type { Context } from "hono";
 
+import * as HttpStatusCodes from "stoker/http-status-codes";
+
 import { createDb } from "@/db";
 import { users } from "@/db/schema";
 import { createKindeClient, sessionManager } from "@/lib/kinde";
@@ -34,7 +36,7 @@ export async function me(c: Context) {
   if (!user) {
     return c.json({ error: "Unauthorized" }, 401);
   }
-  return c.json({ user }, 200);
+  return c.json({ user }, HttpStatusCodes.OK);
 }
 
 export async function capture(c: Context) {
@@ -53,7 +55,7 @@ export async function capture(c: Context) {
     return c.json({
       message: "User already exists",
       user: existingUser,
-    }, 200);
+    }, HttpStatusCodes.OK);
   }
 
   // Create new user
@@ -68,5 +70,5 @@ export async function capture(c: Context) {
   return c.json({
     message: "User created successfully",
     user: newUser,
-  }, 202);
+  }, HttpStatusCodes.CREATED);
 }

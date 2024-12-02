@@ -1,4 +1,5 @@
 import { testClient } from "hono/testing";
+import * as HttpStatusCodes from "stoker/http-status-codes";
 import { describe, expect, it, vi } from "vitest";
 
 import env from "@/env-runtime";
@@ -17,9 +18,9 @@ describe("auth routes", () => {
   it("get /me returns the current user", async () => {
     // @ts-expect-error - expected lint error
     const response = await client.me.$get();
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatusCodes.OK);
 
-    if (response.status === 200) {
+    if (response.status === HttpStatusCodes.OK) {
       const json = await response.json();
       expect(json.user).toEqual(mockUser);
     }
@@ -36,9 +37,9 @@ describe("auth routes", () => {
 
     // @ts-expect-error - expected lint error
     const response = await client.me.$get();
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(HttpStatusCodes.UNAUTHORIZED);
 
-    if (response.status === 401) {
+    if (response.status === HttpStatusCodes.UNAUTHORIZED) {
       const json = await response.json();
       expect(json.error).toBe("Unauthorized");
     }
@@ -47,7 +48,7 @@ describe("auth routes", () => {
   it("post /capture creates a new user when they don't exist in the database", async () => {
     // @ts-expect-error - expected lint error
     const response = await client.capture.$post();
-    expect(response.status).toBe(202);
+    expect(response.status).toBe(HttpStatusCodes.CREATED);
 
     const json = await response.json();
 
@@ -74,7 +75,7 @@ describe("auth routes", () => {
 
     // @ts-expect-error - expected lint error
     const response = await client.capture.$post();
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(HttpStatusCodes.UNAUTHORIZED);
 
     const json = await response.json();
     expect(json).toEqual({
@@ -102,7 +103,7 @@ describe("auth routes", () => {
 
     // @ts-expect-error - expected lint error
     const response = await client.capture.$post();
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatusCodes.OK);
 
     const json = await response.json();
     expect(json).toMatchObject({

@@ -112,7 +112,7 @@ export const capture = createRoute({
       }),
       "User already exists",
     ),
-    [HttpStatusCodes.ACCEPTED]: jsonContent(
+    [HttpStatusCodes.CREATED]: jsonContent(
       z.object({
         message: z.string(),
         user: selectUsersSchema,
