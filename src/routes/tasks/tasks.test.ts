@@ -1,9 +1,7 @@
 /* eslint-disable ts/ban-ts-comment */
 import { testClient } from "hono/testing";
-import { execSync } from "node:child_process";
-import fs from "node:fs";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { afterAll, beforeAll, describe, expect, expectTypeOf, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { ZodIssueCode } from "zod";
 
 import env from "@/env-runtime";
@@ -19,41 +17,6 @@ if (env.NODE_ENV !== "test") {
 const client = testClient(createApp().route("/", router));
 
 describe("tasks routes", () => {
-  beforeAll(async () => {
-    execSync("pnpm drizzle-kit push");
-    execSync("pnpm db:seed");
-  });
-
-  vi.mock("@/lib/kinde", async () => {
-    const actual = await vi.importActual("@/lib/kinde");
-    return {
-      ...actual,
-      verifyBearerToken: vi.fn().mockResolvedValue({
-        sub: "foo",
-        given_name: "Test",
-        family_name: "User",
-        email: "test@example.com",
-        picture: "https://example.com/avatar.jpg",
-      }),
-      getUser: vi.fn().mockImplementation(async (c, next) => {
-        // Mock setting the user in the context
-        c.set("user", {
-          id: "foo",
-          given_name: "Test",
-          family_name: "User",
-          email: "test@example.com",
-          picture: "https://example.com/avatar.jpg",
-        });
-        // Call next to continue the middleware chain
-        await next();
-      }),
-    };
-  });
-
-  afterAll(async () => {
-    fs.rmSync("test.db", { force: true });
-  });
-
   it("post /tasks validates the body when creating", async () => {
     const response = await client.tasks.$post({
       // @ts-expect-error
