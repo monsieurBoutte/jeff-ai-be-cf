@@ -45,8 +45,8 @@ describe("tasks routes", () => {
       },
     });
 
-    expect(response.status).toBe(HttpStatusCodes.OK);
-    if (response.status === HttpStatusCodes.OK) {
+    expect(response.status).toBe(HttpStatusCodes.CREATED);
+    if (response.status === HttpStatusCodes.CREATED) {
       const json = await response.json();
       expect(json.task).toBe(task);
       expect(json.done).toBe(false);
