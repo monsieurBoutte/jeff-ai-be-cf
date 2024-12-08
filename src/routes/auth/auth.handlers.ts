@@ -2,9 +2,13 @@ import type { Context } from "hono";
 
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
+import type { AppRouteHandler } from "@/lib/types";
+
 import { createDb } from "@/db";
 import { users } from "@/db/schema";
 import { createKindeClient, sessionManager } from "@/lib/kinde";
+
+import type { CaptureRoute } from "./auth.routes";
 
 export async function login(c: Context) {
   const kindeClient = createKindeClient(c);
@@ -39,11 +43,13 @@ export async function me(c: Context) {
   return c.json({ user }, HttpStatusCodes.OK);
 }
 
-export async function capture(c: Context) {
+export const capture: AppRouteHandler<CaptureRoute> = async (c) => {
   const user = c.var.user;
   if (!user) {
     return c.json({ error: "Unauthorized" }, 401);
   }
+
+  const userToCapture = c.req.valid("json");
 
   const { db } = createDb(c.env);
   // Check if user exists in database
@@ -61,8 +67,8 @@ export async function capture(c: Context) {
   // Create new user
   const [newUser] = await db.insert(users)
     .values({
-      email: user.email,
-      displayName: `${user.given_name} ${user.family_name}`.trim(),
+      email: userToCapture.email,
+      displayName: userToCapture.displayName,
       authUserId: user.id,
     })
     .returning();
@@ -71,4 +77,4 @@ export async function capture(c: Context) {
     message: "User created successfully",
     user: newUser,
   }, HttpStatusCodes.CREATED);
-}
+};

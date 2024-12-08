@@ -2,10 +2,10 @@ import type { UserType } from "@kinde-oss/kinde-typescript-sdk";
 
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent } from "stoker/openapi/helpers";
+import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { z } from "zod";
 
-import { selectUsersSchema } from "@/db/schema";
+import { insertUsersSchema, selectUsersSchema } from "@/db/schema";
 import { getUser } from "@/lib/kinde";
 
 const tags = ["Auth"];
@@ -100,9 +100,15 @@ export const me = createRoute({
 });
 
 export const capture = createRoute({
-  method: "post",
   path: "/capture",
+  method: "post",
   middleware: [getUser],
+  request: {
+    body: jsonContentRequired(
+      insertUsersSchema,
+      "User to capture",
+    ),
+  },
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
