@@ -33,7 +33,7 @@ describe("tasks routes", () => {
     }
   });
 
-  const id = "rqdz7DFTENMnujlyC";
+  const stableTestUserId = "foo";
   const task = "Learn vitest";
 
   it("post /tasks creates a task", async () => {
@@ -41,7 +41,7 @@ describe("tasks routes", () => {
       json: {
         task,
         done: false,
-        userId: id,
+        userId: stableTestUserId,
       },
     });
 
@@ -127,7 +127,7 @@ describe("tasks routes", () => {
   it("patch /tasks/{id} validates the id param", async () => {
     const response = await client.tasks[":id"].$patch({
       param: {
-        id,
+        id: stableTestUserId,
       },
       json: {},
     });

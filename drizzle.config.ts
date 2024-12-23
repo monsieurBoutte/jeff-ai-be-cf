@@ -10,4 +10,8 @@ export default defineConfig({
     url: env.DATABASE_URL,
     authToken: env.DATABASE_AUTH_TOKEN,
   },
+  // Print all statements
+  verbose: true,
+  // Always ask for my confirmation
+  strict: true,
 });

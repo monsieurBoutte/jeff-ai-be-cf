@@ -1,7 +1,24 @@
 import { createId } from "@paralleldrive/cuid2";
-import { relations } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { relations, sql } from "drizzle-orm";
+import { customType, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
+const float32Array = customType<{
+  data: number[];
+  config: { dimensions: number };
+  configRequired: true;
+  driverData: import("buffer").Buffer;
+}>({
+      dataType(config) {
+        return `F32_BLOB(${config.dimensions})`;
+      },
+      fromDriver(value: import("buffer").Buffer) {
+        return Array.from(new Float32Array(value.buffer));
+      },
+      toDriver(value: number[]) {
+        return sql`vector32(${JSON.stringify(value)})`;
+      },
+    });
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey().$defaultFn(() => createId()),
@@ -33,13 +50,42 @@ export const tasks = sqliteTable("tasks", {
     .$onUpdate(() => new Date()),
 });
 
+export const feedback = sqliteTable("feedback", {
+  id: text("id").primaryKey().$defaultFn(() => createId()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  featureType: text("feature_type")
+    .notNull(),
+  featureId: text("feature_id")
+    .notNull(),
+  rating: integer("rating")
+    .notNull(),
+  comment: text("comment"),
+  vector: float32Array("vector", { dimensions: 1536 })
+    .default([]),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .$onUpdate(() => new Date()),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   tasks: many(tasks),
+  feedback: many(feedback),
 }));
 
 export const tasksRelations = relations(tasks, ({ one }) => ({
   user: one(users, {
     fields: [tasks.userId],
+    references: [users.id],
+  }),
+}));
+
+export const feedbackRelations = relations(feedback, ({ one }) => ({
+  user: one(users, {
+    fields: [feedback.userId],
     references: [users.id],
   }),
 }));
@@ -79,3 +125,27 @@ export const insertTasksSchema = createInsertSchema(
 });
 
 export const patchTasksSchema = insertTasksSchema.partial();
+
+export const selectFeedbackSchema = createSelectSchema(feedback);
+
+export const insertFeedbackSchema = createInsertSchema(
+  feedback,
+  {
+    featureType: schema => schema.featureType.min(1).max(100),
+    featureId: schema => schema.featureId.min(1),
+    rating: schema => schema.rating.min(1).max(5),
+    comment: schema => schema.comment.max(1000).optional(),
+    vector: schema => schema.vector.array().optional(),
+  },
+).required({
+  userId: true,
+  featureType: true,
+  featureId: true,
+  rating: true,
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const patchFeedbackSchema = insertFeedbackSchema.partial();

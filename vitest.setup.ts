@@ -8,8 +8,7 @@ beforeAll(async () => {
   // Remove any existing test database
   fs.rmSync("test.db", { force: true });
 
-  // Set up fresh database with force flag to drop existing tables
-  execSync("pnpm drizzle-kit push");
+  execSync("pnpm drizzle-kit push --force");
   execSync("pnpm db:seed");
 
   vi.mock("@/lib/kinde", async () => {

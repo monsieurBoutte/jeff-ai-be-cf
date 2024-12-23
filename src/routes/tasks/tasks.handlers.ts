@@ -16,7 +16,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   const tasks = await db.query.tasks.findMany();
   return c.json(tasks, HttpStatusCodes.OK);
 };
@@ -27,7 +27,7 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   const task = c.req.valid("json");
 
   const [inserted] = await db.insert(tasks).values(task).returning();
@@ -40,7 +40,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   const { id } = c.req.valid("param");
   const task = await db.query.tasks.findFirst({
     where(fields, operators) {
@@ -66,7 +66,7 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   const { id } = c.req.valid("param");
   const updates = c.req.valid("json");
 
@@ -112,7 +112,7 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   const { id } = c.req.valid("param");
   const result = await db.delete(tasks)
     .where(eq(tasks.id, id));

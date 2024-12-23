@@ -15,6 +15,27 @@
       "when": 1733083632283,
       "tag": "0001_striped_nico_minoru",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1733720592761,
+      "tag": "0002_solid_blue_blade",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1733748255810,
+      "tag": "0003_chubby_black_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1734983331508,
+      "tag": "0004_eager_sugar_man",
+      "breakpoints": true
     }
   ]
 }

@@ -105,7 +105,9 @@ export const capture = createRoute({
   middleware: [getUser],
   request: {
     body: jsonContentRequired(
-      insertUsersSchema,
+      insertUsersSchema.omit({
+        authUserId: true,
+      }),
       "User to capture",
     ),
   },

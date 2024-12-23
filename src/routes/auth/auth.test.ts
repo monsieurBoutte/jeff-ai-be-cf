@@ -56,9 +56,9 @@ describe("auth routes", () => {
     expect(json).toMatchObject({
       message: "User created successfully",
       user: {
-        authUserId: "foo",
-        displayName: "Test User",
-        email: "test@example.com",
+        authUserId: "quack",
+        displayName: "Nekita Quack",
+        email: "quack@example.com",
         id: expect.any(String),
       },
     });

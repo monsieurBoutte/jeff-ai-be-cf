@@ -7,17 +7,25 @@ import env from "@/env-runtime";
 async function main() {
   const db = drizzle(env.DATABASE_URL!);
   await reset(db, schema);
-  await seed(db, schema, { count: 10, seed: 1 });
-  // await seed(db, schema).refine(f => ({
-  //   users: {
-  //     count: 1,
-  //     columns: {
-  //       authUserId: f.fullName().init({ seed: 1 }),
-  //     },
-  //     with: {
-  //       tasks: 10,
-  //     },
-  //   },
-  // }));
+  await seed(db, schema).refine(f => ({
+    users: {
+      count: 3,
+      columns: {
+        id: f.valuesFromArray({
+          values: ["foo", "bar", "baz"],
+          isUnique: true,
+        }),
+      },
+    },
+    feedback: {
+      count: 10,
+      columns: {
+        vector: f.valuesFromArray({
+          values: [0, 0.3, 0.5, 0.7, 0.9],
+          arraySize: 1536,
+        }),
+      },
+    },
+  }));
 }
 main();

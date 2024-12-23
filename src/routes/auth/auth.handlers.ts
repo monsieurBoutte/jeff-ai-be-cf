@@ -49,9 +49,15 @@ export const capture: AppRouteHandler<CaptureRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, 401);
   }
 
-  const userToCapture = c.req.valid("json");
+  const userToCapture = Object.keys(c.req.valid("json")).length > 0
+    ? c.req.valid("json")
+    : {
+        id: user.id,
+        email: user.email,
+        displayName: `${user.given_name ?? ""} ${user?.family_name ?? ""}`.trim(),
+      };
 
-  const { db } = createDb(c.env);
+  const { db } = await createDb(c.env);
   // Check if user exists in database
   const existingUser = await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.authUserId, user.id),
