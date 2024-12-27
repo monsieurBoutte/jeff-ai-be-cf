@@ -8,7 +8,7 @@ import env from "@/env-runtime";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import createApp from "@/lib/create-app";
 
-import router from "./feedback.index";
+import router from "./refinements.index";
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
@@ -17,41 +17,35 @@ if (env.NODE_ENV !== "test") {
 const client = testClient(createApp().route("/", router));
 
 const stableTestUserId = "foo";
-const featureType = "refinements";
-const featureId = "foo-refinement-id-1";
-const comment = "This is refinement feedback";
-const rating = 1;
+const originalText = "This is the original text";
+const refinedText = "This is the refined text";
 
-const existingFeedbackId = "mPWX9qMys5BORyY";
+const existingRefinementId = "xrAS2ApKK48UJSgXX";
 
-describe("feedback routes", () => {
-  it("post /feedback validates the body when creating", async () => {
-    const response = await client.feedback.$post({
+describe("refinements routes", () => {
+  it("post /refinements validates the body when creating", async () => {
+    const response = await client.refinements.$post({
       // @ts-expect-error testing validation
       json: {
         userId: stableTestUserId,
-        // featureType, <-- intentionally missing
-        featureId,
-        comment,
-        rating,
+        // originalText, <-- intentionally missing
+        refinedText,
       },
     });
     expect(response.status).toBe(HttpStatusCodes.UNPROCESSABLE_ENTITY);
     if (response.status === HttpStatusCodes.UNPROCESSABLE_ENTITY) {
       const json = await response.json();
-      expect(json.error.issues[0].path[0]).toBe("featureType");
+      expect(json.error.issues[0].path[0]).toBe("originalText");
       expect(json.error.issues[0].message).toBe(ZOD_ERROR_MESSAGES.REQUIRED);
     }
   });
 
-  it("post /feedback creates a feedback", async () => {
-    const response = await client.feedback.$post({
+  it("post /refinements creates a refinement", async () => {
+    const response = await client.refinements.$post({
       json: {
         userId: stableTestUserId,
-        featureType,
-        featureId,
-        comment,
-        rating,
+        originalText,
+        refinedText,
       },
     });
 
@@ -60,27 +54,25 @@ describe("feedback routes", () => {
       const json = await response.json();
       expect(json.id).toBeDefined();
       expect(json.userId).toBe(stableTestUserId);
-      expect(json.featureType).toBe(featureType);
-      expect(json.featureId).toBe(featureId);
-      expect(json.comment).toBe(comment);
-      expect(json.rating).toBe(rating);
+      expect(json.originalText).toBe(originalText);
+      expect(json.refinedText).toBe(refinedText);
     }
   });
 
-  it("get /feedback lists all feedback", async () => {
-    const response = await client.feedback.$get();
+  it("get /refinements lists all refinements", async () => {
+    const response = await client.refinements.$get();
     expect(response.status).toBe(HttpStatusCodes.OK);
     if (response.status === HttpStatusCodes.OK) {
       const json = await response.json();
       expectTypeOf(json).toBeArray();
-      // this is the number of feedback seeded in the src/db/seed.ts file
+      // this is the number of refinements seeded in the src/db/seed.ts file
       // plus the one we created in the previous test
       expect(json.length).toBe(11);
     }
   });
 
-  it("get /feedback/{id} returns 404 when feedback not found", async () => {
-    const response = await client.feedback[":id"].$get({
+  it("get /refinements/{id} returns 404 when refinement not found", async () => {
+    const response = await client.refinements[":id"].$get({
       param: {
         id: "101",
       },
@@ -92,37 +84,37 @@ describe("feedback routes", () => {
     }
   });
 
-  it("get /feedback/{id} gets a single feedback", async () => {
-    const response = await client.feedback[":id"].$get({
+  it("get /refinements/{id} gets a single refinement", async () => {
+    const response = await client.refinements[":id"].$get({
       param: {
-        id: existingFeedbackId,
+        id: existingRefinementId,
       },
     });
     expect(response.status).toBe(HttpStatusCodes.OK);
   });
 
-  it("patch /feedback/{id} validates the body when updating", async () => {
-    const response = await client.feedback[":id"].$patch({
+  it("patch /refinements/{id} validates the body when updating", async () => {
+    const response = await client.refinements[":id"].$patch({
       param: {
-        id: existingFeedbackId,
+        id: existingRefinementId,
       },
       json: {
         // @ts-expect-error testing validation
-        comment: 6,
+        refinedText: 6,
       },
     });
     expect(response.status).toBe(HttpStatusCodes.UNPROCESSABLE_ENTITY);
     if (response.status === HttpStatusCodes.UNPROCESSABLE_ENTITY) {
       const json = await response.json();
-      expect(json.error.issues[0].path[0]).toBe("comment");
+      expect(json.error.issues[0].path[0]).toBe("refinedText");
       expect(json.error.issues[0].code).toBe(ZodIssueCode.invalid_type);
     }
   });
 
-  it("patch /feedback/{id} validates empty body", async () => {
-    const response = await client.feedback[":id"].$patch({
+  it("patch /refinements/{id} validates empty body", async () => {
+    const response = await client.refinements[":id"].$patch({
       param: {
-        id: existingFeedbackId,
+        id: existingRefinementId,
       },
       json: {},
     });
@@ -134,26 +126,26 @@ describe("feedback routes", () => {
     }
   });
 
-  it("patch /feedback/{id} updates a single property of a feedback", async () => {
-    const response = await client.feedback[":id"].$patch({
+  it("patch /refinements/{id} updates a single property of a refinement", async () => {
+    const response = await client.refinements[":id"].$patch({
       param: {
-        id: existingFeedbackId,
+        id: existingRefinementId,
       },
       json: {
-        comment: "this is an updated comment",
+        refinedText: "this is an updated refined text",
       },
     });
     expect(response.status).toBe(HttpStatusCodes.OK);
     if (response.status === HttpStatusCodes.OK) {
       const json = await response.json();
-      expect(json.comment).toBe("this is an updated comment");
+      expect(json.refinedText).toBe("this is an updated refined text");
     }
   });
 
-  it("delete /feedback/{id} removes a feedback", async () => {
-    const response = await client.feedback[":id"].$delete({
+  it("delete /refinements/{id} removes a refinement", async () => {
+    const response = await client.refinements[":id"].$delete({
       param: {
-        id: existingFeedbackId,
+        id: existingRefinementId,
       },
     });
     expect(response.status).toBe(HttpStatusCodes.NO_CONTENT);

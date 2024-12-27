@@ -71,9 +71,28 @@ export const feedback = sqliteTable("feedback", {
     .$onUpdate(() => new Date()),
 });
 
+export const refinements = sqliteTable("refinements", {
+  id: text("id").primaryKey().$defaultFn(() => createId()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  originalText: text("original_text")
+    .notNull(),
+  refinedText: text("refined_text")
+    .notNull(),
+  vector: float32Array("vector", { dimensions: 1536 })
+    .default([]),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .$onUpdate(() => new Date()),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   tasks: many(tasks),
   feedback: many(feedback),
+  refinements: many(refinements),
 }));
 
 export const tasksRelations = relations(tasks, ({ one }) => ({
@@ -86,6 +105,13 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
 export const feedbackRelations = relations(feedback, ({ one }) => ({
   user: one(users, {
     fields: [feedback.userId],
+    references: [users.id],
+  }),
+}));
+
+export const refinementsRelations = relations(refinements, ({ one }) => ({
+  user: one(users, {
+    fields: [refinements.userId],
     references: [users.id],
   }),
 }));
@@ -149,3 +175,23 @@ export const insertFeedbackSchema = createInsertSchema(
 });
 
 export const patchFeedbackSchema = insertFeedbackSchema.partial();
+
+export const selectRefinementsSchema = createSelectSchema(refinements);
+
+export const insertRefinementsSchema = createInsertSchema(
+  refinements,
+  {
+    originalText: schema => schema.originalText.min(1).max(500),
+    refinedText: schema => schema.refinedText.min(1).max(500),
+  },
+).required({
+  userId: true,
+  originalText: true,
+  refinedText: true,
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const patchRefinementsSchema = insertRefinementsSchema.partial();
