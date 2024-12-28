@@ -26,6 +26,15 @@ async function main() {
         }),
       },
     },
+    refinements: {
+      count: 10,
+      columns: {
+        vector: f.valuesFromArray({
+          values: [0, 0.3, 0.5, 0.7, 0.9],
+          arraySize: 1536,
+        }),
+      },
+    },
   }));
 }
 main();

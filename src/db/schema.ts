@@ -80,6 +80,7 @@ export const refinements = sqliteTable("refinements", {
     .notNull(),
   refinedText: text("refined_text")
     .notNull(),
+  explanation: text("explanation"),
   vector: float32Array("vector", { dimensions: 1536 })
     .default([]),
   createdAt: integer("created_at", { mode: "timestamp" })
@@ -178,13 +179,7 @@ export const patchFeedbackSchema = insertFeedbackSchema.partial();
 
 export const selectRefinementsSchema = createSelectSchema(refinements);
 
-export const insertRefinementsSchema = createInsertSchema(
-  refinements,
-  {
-    originalText: schema => schema.originalText.min(1).max(500),
-    refinedText: schema => schema.refinedText.min(1).max(500),
-  },
-).required({
+export const insertRefinementsSchema = createInsertSchema(refinements).required({
   userId: true,
   originalText: true,
   refinedText: true,

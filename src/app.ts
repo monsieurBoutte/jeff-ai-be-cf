@@ -3,6 +3,7 @@ import createApp from "@/lib/create-app";
 import auth from "@/routes/auth/auth.index";
 import feedback from "@/routes/feedback/feedback.index";
 import index from "@/routes/index.route";
+import refinements from "@/routes/refinements/refinements.index";
 import tasks from "@/routes/tasks/tasks.index";
 
 const app = createApp();
@@ -13,6 +14,7 @@ const routes = [
   index,
   auth,
   feedback,
+  refinements,
   tasks,
 ] as const;
 

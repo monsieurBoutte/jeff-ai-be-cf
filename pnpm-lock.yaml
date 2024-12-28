@@ -23,6 +23,9 @@ dependencies:
   '@scalar/hono-api-reference':
     specifier: ^0.5.150
     version: 0.5.158(hono@4.6.9)
+  dedent:
+    specifier: ^1.5.3
+    version: 1.5.3
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -2627,6 +2630,15 @@ packages:
     dependencies:
       character-entities: 2.0.2
     dev: true
+
+  /dedent@1.5.3:
+    resolution: {integrity: sha512-NHQtfOOW68WD8lgypbLA5oT+Bt0xXJhiYvoR6SmmNXZfpzOGXwdKWmcwG8N7PwVVWV3eF/68nmD9BaJSsTBhyQ==}
+    peerDependencies:
+      babel-plugin-macros: ^3.1.0
+    peerDependenciesMeta:
+      babel-plugin-macros:
+        optional: true
+    dev: false
 
   /deep-eql@5.0.2:
     resolution: {integrity: sha512-h5k/5U50IJJFpzfL6nO9jaaumfjO/f2NjK/oYB2Djzm4p9L+3T9qWpZqZ2hAbLPuuYq9wrU08WQyBTL5GbPk5Q==}

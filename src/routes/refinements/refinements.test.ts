@@ -18,7 +18,7 @@ const client = testClient(createApp().route("/", router));
 
 const stableTestUserId = "foo";
 const originalText = "This is the original text";
-const refinedText = "This is the refined text";
+const refinedText = "This is a test refined copy";
 
 const existingRefinementId = "xrAS2ApKK48UJSgXX";
 
@@ -29,7 +29,6 @@ describe("refinements routes", () => {
       json: {
         userId: stableTestUserId,
         // originalText, <-- intentionally missing
-        refinedText,
       },
     });
     expect(response.status).toBe(HttpStatusCodes.UNPROCESSABLE_ENTITY);
@@ -45,7 +44,6 @@ describe("refinements routes", () => {
       json: {
         userId: stableTestUserId,
         originalText,
-        refinedText,
       },
     });
 

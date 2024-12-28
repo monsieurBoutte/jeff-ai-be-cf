@@ -24,6 +24,7 @@
     "@libsql/client": "^0.14.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@scalar/hono-api-reference": "^0.5.150",
+    "dedent": "^1.5.3",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "drizzle-orm": "^0.36.4",

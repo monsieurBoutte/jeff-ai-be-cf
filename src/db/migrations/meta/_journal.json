@@ -43,6 +43,13 @@
       "when": 1735339900540,
       "tag": "0005_mysterious_victor_mancha",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1735420616924,
+      "tag": "0006_woozy_stingray",
+      "breakpoints": true
     }
   ]
 }

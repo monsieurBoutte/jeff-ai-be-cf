@@ -10,7 +10,7 @@ export interface AppBindings {
     logger: PinoLogger;
     user?: UserType;
   };
-};
+}
 
 export type AppOpenAPI = OpenAPIHono<AppBindings>;
 

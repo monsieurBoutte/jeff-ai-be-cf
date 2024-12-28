@@ -34,19 +34,55 @@ export const create = createRoute({
   middleware: [getUser],
   request: {
     body: jsonContentRequired(
-      insertRefinementsSchema,
+      insertRefinementsSchema.extend({
+        additionalContext: z.string().optional(),
+      }).omit({
+        refinedText: true,
+        vector: true,
+      }),
       "The feedback to create",
     ),
   },
   tags,
   responses: {
     [HttpStatusCodes.CREATED]: jsonContent(
-      selectRefinementsSchema,
+      selectRefinementsSchema.extend({
+        explanation: z.string().optional(),
+      }),
       "The created refinement",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertRefinementsSchema),
       "The validation error(s)",
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "Unauthorized",
+    ),
+  },
+});
+
+export const convertToMarkdown = createRoute({
+  path: "/refinements/convert-to-markdown",
+  method: "post",
+  middleware: [getUser],
+  request: {
+    body: jsonContentRequired(
+      z.object({
+        html: z.string(),
+      }),
+      "The HTML to convert to markdown",
+    ),
+  },
+  tags,
+  responses: {
+    [HttpStatusCodes.CREATED]: jsonContent(
+      z.object({
+        markdown: z.string(),
+      }),
+      "The markdown",
     ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({
@@ -159,6 +195,7 @@ export const remove = createRoute({
 
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
+export type ConvertToMarkdownRoute = typeof convertToMarkdown;
 export type GetOneRoute = typeof getOne;
 export type PatchRoute = typeof patch;
 export type RemoveRoute = typeof remove;

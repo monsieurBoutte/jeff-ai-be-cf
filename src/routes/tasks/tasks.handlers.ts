@@ -17,8 +17,10 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   }
 
   const { db } = await createDb(c.env);
-  const tasks = await db.query.tasks.findMany();
-  return c.json(tasks, HttpStatusCodes.OK);
+  const taskResults = await db.query.tasks.findMany({
+    where: eq(tasks.userId, user.id),
+  });
+  return c.json(taskResults, HttpStatusCodes.OK);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
