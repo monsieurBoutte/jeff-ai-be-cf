@@ -167,6 +167,7 @@ export const convertToMarkdown: AppRouteHandler<ConvertToMarkdownRoute> = async 
         - Accurately convert HTML elements to their Markdown equivalents.
         - Preserve the structure and content of the original HTML.
         - Ensure the Markdown output is clean, readable, and maintains the original intent.
+        - <code> tags should be converted to markdown code blocks.
 
         IMPORTANT:
         - Focus solely on converting the HTML provided.

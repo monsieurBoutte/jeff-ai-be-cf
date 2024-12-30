@@ -18,6 +18,7 @@ const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
   DATABASE_AUTH_TOKEN: z.string().optional(),
   OPENAI_API_KEY: z.string(),
+  DEEPGRAM_API_KEY: z.string(),
   KINDE_CLIENT_ID: z.string(),
   KINDE_ISSUER_BASE_URL: z.string(),
   KINDE_SECRET: z.string(),
