@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import OpenAI from "openai";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
@@ -30,12 +31,30 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
   const { db } = await createDb(c.env);
   const feedbackPayload = c.req.valid("json");
 
-  // todo add openai embedding for non-test environments
+  const openai = new OpenAI({
+    apiKey: c.env.OPENAI_API_KEY,
+  });
+
   // fake the embedding in TEST environment
   const fakeEmbedding = Array.from({ length: 1536 }, () => Math.floor(Math.random() * 100));
-  const placeholderVector = c.env.NODE_ENV === "test" ? fakeEmbedding : undefined;
+  const embedding = c.env.NODE_ENV !== "test" && feedbackPayload.comment
+    ? await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: feedbackPayload.comment,
+      encoding_format: "float",
+    })
+    : {
+        object: "list",
+        data: [
+          {
+            object: "embedding",
+            index: 0,
+            embedding: fakeEmbedding,
+          },
+        ],
+      };
 
-  const [inserted] = await db.insert(feedback).values({ ...feedbackPayload, vector: placeholderVector }).returning();
+  const [inserted] = await db.insert(feedback).values({ ...feedbackPayload, vector: feedbackPayload.comment ? embedding.data[0].embedding : undefined }).returning();
   return c.json(inserted, HttpStatusCodes.CREATED);
 };
 
