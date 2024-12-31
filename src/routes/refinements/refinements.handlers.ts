@@ -118,7 +118,9 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
     .values({
       userId: refinementsPayload.userId,
       originalText: refinementsPayload.originalText,
+      originalTextWordCount: refinementsPayload.originalText.split(" ").filter(word => word !== "").length,
       refinedText: refinement?.refined_copy ?? "",
+      refinedTextWordCount: refinement?.refined_copy?.split(" ").filter(word => word !== "").length ?? 0,
       explanation: refinement?.explanation,
       vector: embedding.data[0].embedding,
     })

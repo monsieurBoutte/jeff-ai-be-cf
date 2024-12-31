@@ -1,0 +1,2 @@
+ALTER TABLE `refinements` RENAME COLUMN "original_text_character_count" TO "original_text_word_count";--> statement-breakpoint
+ALTER TABLE `refinements` RENAME COLUMN "refined_text_character_count" TO "refined_text_word_count";

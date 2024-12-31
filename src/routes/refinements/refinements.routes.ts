@@ -37,7 +37,8 @@ export const create = createRoute({
       insertRefinementsSchema.extend({
         additionalContext: z.string().optional(),
       }).omit({
-        refinedText: true,
+        originalTextWordCount: true,
+        refinedTextWordCount: true,
         vector: true,
       }),
       "The feedback to create",

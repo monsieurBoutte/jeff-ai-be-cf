@@ -78,7 +78,11 @@ export const refinements = sqliteTable("refinements", {
     .references(() => users.id),
   originalText: text("original_text")
     .notNull(),
+  originalTextWordCount: integer("original_text_word_count")
+    .notNull(),
   refinedText: text("refined_text")
+    .notNull(),
+  refinedTextWordCount: integer("refined_text_word_count")
     .notNull(),
   explanation: text("explanation"),
   vector: float32Array("vector", { dimensions: 1536 })
