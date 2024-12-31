@@ -38,6 +38,7 @@ export const create = createRoute({
         additionalContext: z.string().optional(),
       }).omit({
         originalTextWordCount: true,
+        refinedText: true,
         refinedTextWordCount: true,
         vector: true,
       }),
