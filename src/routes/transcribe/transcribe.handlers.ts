@@ -41,6 +41,9 @@ async function refineCopy(text: string, openaiApiKey: string) {
           refined_copy: string,
           explanation: string,
         }
+
+        It's really important you look out for that trigger phrase and translate the text to the target language.
+        If you don't see it, then just refine the text as normal.
       ` },
       { role: "user", content: text },
     ],
