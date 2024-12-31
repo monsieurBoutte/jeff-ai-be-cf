@@ -21,7 +21,11 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   }
 
   const { db } = await createDb(c.env);
-  const refinements = await db.query.refinements.findMany();
+  const refinements = await db.query.refinements.findMany({
+    where(fields, operators) {
+      return operators.eq(fields.userId, user.id);
+    },
+  });
   return c.json(refinements, HttpStatusCodes.OK);
 };
 
