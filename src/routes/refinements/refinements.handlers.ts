@@ -9,7 +9,7 @@ import { z } from "zod";
 import type { AppRouteHandler } from "@/lib/types";
 
 import { createDb } from "@/db";
-import { refinements } from "@/db/schema";
+import { refinements, users } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 import type { ConvertToMarkdownRoute, CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./refinements.routes";
@@ -21,11 +21,20 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   }
 
   const { db } = await createDb(c.env);
+  const existingUser = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.authUserId, user.id),
+  });
+
+  if (!existingUser) {
+    return c.json({ error: "User not found" }, HttpStatusCodes.NOT_FOUND);
+  }
+
   const refinements = await db.query.refinements.findMany({
     where(fields, operators) {
-      return operators.eq(fields.userId, user.id);
+      return operators.eq(fields.userId, existingUser.id);
     },
   });
+
   return c.json(refinements, HttpStatusCodes.OK);
 };
 

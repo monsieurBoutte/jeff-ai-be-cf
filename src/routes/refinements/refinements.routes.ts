@@ -19,6 +19,12 @@ export const list = createRoute({
       z.array(selectRefinementsSchema),
       "The list of refinements",
     ),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+      z.object({
+        error: z.string(),
+      }),
+      "User not found",
+    ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({
         error: z.string(),
