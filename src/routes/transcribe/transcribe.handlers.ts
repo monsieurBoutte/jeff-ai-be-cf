@@ -31,6 +31,11 @@ async function refineCopy(text: string, openaiApiKey: string) {
         - Enhance clarity and flow.
         - Preserve the original message and tone.
 
+        IMPORTANT:
+        - There's a translation trigger phrase that you should be aware of:
+          - "Hey Jeff, translate this to <target language>"
+          - If you see this as the start of the original text, you should translate the original text to the target language.
+
         Provide the following JSON:
         {
           refined_copy: string,

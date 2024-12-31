@@ -71,9 +71,6 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
         - Do not edit the additional context; it is provided solely for informational purposes to guide your refinement of the original text.
         - Your task is to refine only the original text, using the context to inform your edits without altering it.
         - Be sure to make grammatical changes to the original text where necessary.
-        - There's a translation trigger phrase that you should be aware of:
-          - "Hey Jeff, translate this to <target language>"
-          - If you see this as the start of the original text, you should translate the original text to the target language.
 
         Provide the following JSON:
         {
