@@ -45,6 +45,7 @@ async function refineCopy(text: string, openaiApiKey: string) {
       { role: "user", content: `Help me refine the following text: ${text}` },
     ],
     response_format: zodResponseFormat(RefinedCopy, "refined_copy"),
+    temperature: 1,
   });
 
   return completion.choices[0].message.parsed;
