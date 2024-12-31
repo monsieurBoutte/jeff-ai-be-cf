@@ -24,8 +24,7 @@ async function refineCopy(text: string, openaiApiKey: string) {
     model: "gpt-4o-mini",
     messages: [
       { role: "system", content: dedent`
-        You are a professional copy editor dedicated to refining the original text provided.
-        Your mission is to:
+       You are a professional copy editor dedicated to refining the original text provided. Your mission is to:
         - Focus exclusively on refining the original text.
         - Eliminate redundant or filler words.
         - Enhance clarity and flow.
@@ -33,17 +32,14 @@ async function refineCopy(text: string, openaiApiKey: string) {
 
         IMPORTANT:
         - There's a translation trigger phrase that you should be aware of:
-          - "Hey Jeff, translate this to <target language>"
-          - If you see this as the start of the original text, you should translate the original text to the target language.
+          - "Hey Jeff translate this to <target language>"
+          - If you see this as the start of the original text, you should translate the refined_copy to the target language.
 
         Provide the following JSON:
         {
           refined_copy: string,
           explanation: string,
         }
-
-        It's really important you look out for that trigger phrase and translate the text to the target language.
-        If you don't see it, then just refine the text as normal.
       ` },
       { role: "user", content: text },
     ],
