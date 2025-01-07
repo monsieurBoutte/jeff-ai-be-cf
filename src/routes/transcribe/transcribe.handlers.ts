@@ -45,6 +45,13 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 
     const trancription = result?.results?.channels?.[0]?.alternatives?.[0]?.transcript;
 
+    if (trancription === "") {
+      return c.json(
+        { message: "No dialog detected" },
+        HttpStatusCodes.OK,
+      );
+    }
+
     if (!trancription) {
       return c.json(
         { error: "Failed to get transcription" },

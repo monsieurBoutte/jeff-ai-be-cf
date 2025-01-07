@@ -34,6 +34,12 @@ export const create = createRoute({
       }),
       "The transcription of the media file",
     ),
+    [HttpStatusCodes.OK]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      "No dialog detected in the media file",
+    ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
       z.object({
         error: z.string(),
