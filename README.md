@@ -31,7 +31,7 @@ base template started from [hono-open-api-starter](https://github.com/w3cj/hono-
 
 ### Installation
 
-1. Clone the repository w/o the git history: `npx degit monsieurBoutte/monsieurBoutte/jeff-ai-be-cf my-project`
+1. Clone the repository w/o the git history: `npx degit monsieurBoutte/jeff-ai-be-cf your-project-name`
 2. Install dependencies: `pnpm install`
 3. Create a `.env` file and via: `cp .env.sample .env`
 4. Create a `.dev.vars` file and via: `cp .env.sample .dev.vars`
