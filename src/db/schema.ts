@@ -2,6 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
 import { customType, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 const float32Array = customType<{
   data: number[];
@@ -43,6 +44,8 @@ export const tasks = sqliteTable("tasks", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id),
+  assignedDate: integer("assigned_date", { mode: "timestamp" })
+    .notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" })
@@ -145,9 +148,11 @@ export const insertTasksSchema = createInsertSchema(
   tasks,
   {
     task: schema => schema.task.min(1).max(500),
+    assignedDate: () => z.coerce.date().transform(val => new Date(val)),
   },
 ).required({
   done: true,
+  assignedDate: true,
   userId: true,
 }).omit({
   id: true,

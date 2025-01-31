@@ -16,13 +16,11 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
-  console.log("** user", user);
-
   const { db } = await createDb(c.env);
   const userResults = await db.query.users.findFirst({
     where: eq(users.authUserId, user.id),
   });
-  console.log("** userResults?.id", userResults?.id);
+
   const taskResults = await db.query.tasks.findMany({
     where: (tasks, { eq }) => eq(tasks.userId, userResults?.id ?? "not found"),
   });
@@ -37,6 +35,7 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 
   const { db } = await createDb(c.env);
   const task = c.req.valid("json");
+  console.log("** task", task);
 
   const [inserted] = await db.insert(tasks).values(task).returning();
   return c.json(inserted, HttpStatusCodes.CREATED);
