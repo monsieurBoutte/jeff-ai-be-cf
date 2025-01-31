@@ -5,7 +5,7 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases";
 import type { AppRouteHandler } from "@/lib/types";
 
 import { createDb } from "@/db";
-import { tasks } from "@/db/schema";
+import { tasks, users } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "./tasks.routes";
@@ -16,9 +16,15 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     return c.json({ error: "Unauthorized" }, HttpStatusCodes.UNAUTHORIZED);
   }
 
+  console.log("** user", user);
+
   const { db } = await createDb(c.env);
+  const userResults = await db.query.users.findFirst({
+    where: eq(users.authUserId, user.id),
+  });
+  console.log("** userResults?.id", userResults?.id);
   const taskResults = await db.query.tasks.findMany({
-    where: eq(tasks.userId, user.id),
+    where: (tasks, { eq }) => eq(tasks.userId, userResults?.id ?? "not found"),
   });
   return c.json(taskResults, HttpStatusCodes.OK);
 };
