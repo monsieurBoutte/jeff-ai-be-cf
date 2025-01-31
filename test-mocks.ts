@@ -1,6 +1,6 @@
 // mocked user object returned by the kinde api
 export const mockUser = {
-  id: "quack",
+  id: "SgDa2xZs47ojqwo0C",
   given_name: "Nekita",
   family_name: "Quack",
   email: "quack@example.com",

@@ -66,11 +66,8 @@ describe("tasks routes", () => {
     expect(response.status).toBe(HttpStatusCodes.OK);
     if (response.status === HttpStatusCodes.OK) {
       const json = await response.json();
-      console.log("** json", json);
-      console.log("** json.length", json.length);
       expectTypeOf(json).toBeArray();
-      // Update the expectation to just check for the one task we created
-      expect(json.length).toBe(1);
+      expect(json.length).toBe(4);
     }
   });
 

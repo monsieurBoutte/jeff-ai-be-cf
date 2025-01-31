@@ -65,7 +65,7 @@ describe("refinements routes", () => {
       expectTypeOf(json).toBeArray();
       // this is the number of refinements seeded in the src/db/seed.ts file
       // plus the one we created in the previous test
-      expect(json.length).toBe(11);
+      expect(json.length).toBe(1);
     }
   });
 

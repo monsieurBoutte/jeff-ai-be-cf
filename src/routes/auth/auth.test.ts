@@ -46,6 +46,23 @@ describe("auth routes", () => {
   });
 
   it("post /capture creates a new user when they don't exist in the database", async () => {
+    // Override the mock to simulate a new user
+    vi.mocked(await import("@/lib/kinde")).getUser.mockImplementationOnce(
+      async (c, next) => {
+        // Set the user in the context
+        c.set("user", {
+          id: "quack123",
+          given_name: "Nekita456",
+          email: "quack@example.com",
+          family_name: "Quack",
+          picture: "https://example.com/avatar.jpg",
+        });
+
+        // Continue the middleware chain
+        await next();
+      },
+    );
+
     // @ts-expect-error - expected lint error
     const response = await client.capture.$post();
     expect(response.status).toBe(HttpStatusCodes.CREATED);
@@ -56,8 +73,8 @@ describe("auth routes", () => {
     expect(json).toMatchObject({
       message: "User created successfully",
       user: {
-        authUserId: "quack",
-        displayName: "Nekita Quack",
+        authUserId: "quack123",
+        displayName: "Nekita456 Quack",
         email: "quack@example.com",
         id: expect.any(String),
       },
