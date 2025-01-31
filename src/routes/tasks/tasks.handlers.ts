@@ -35,7 +35,6 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 
   const { db } = await createDb(c.env);
   const task = c.req.valid("json");
-  console.log("** task", task);
 
   const [inserted] = await db.insert(tasks).values(task).returning();
   return c.json(inserted, HttpStatusCodes.CREATED);
