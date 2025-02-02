@@ -24,8 +24,11 @@ base template started from [hono-open-api-starter](https://github.com/w3cj/hono-
 
 - Node.js (v18 or higher)
 - pnpm package manager
-- Cloudflare account
-- Turso account
+- [Cloudflare account](https://www.cloudflare.com/)
+- [Kinde account](https://kinde.com/)
+- [OpenAI account](https://platform.openai.com/docs/overview)
+- [Deepgram account](https://deepgram.com/)
+- [Turso account](https://turso.tech/)
 - Turso CLI installed (`npm install -g turso`)
 - Wrangler CLI installed (`npm install -g wrangler`)
 
