@@ -4,7 +4,6 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema } from "stoker/openapi/schemas";
 
 import { insertSettingsSchema, patchSettingsSchema, selectSettingsSchema } from "@/db/schema";
-import { notFoundSchema } from "@/lib/constants";
 import { getUser } from "@/lib/kinde";
 
 const tags = ["Settings"];
