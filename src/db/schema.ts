@@ -103,8 +103,8 @@ export const settings = sqliteTable("settings", {
     .notNull()
     .unique()
     .references(() => users.id),
-  lat: text("lat"),
-  lon: text("lon"),
+  lat: integer("lat"),
+  lon: integer("lon"),
   city: text("city"),
   state: text("state"),
   country: text("country"),
