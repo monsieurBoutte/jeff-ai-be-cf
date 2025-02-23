@@ -236,8 +236,8 @@ export const selectSettingsSchema = createSelectSchema(settings);
 export const insertSettingsSchema = createInsertSchema(
   settings,
   {
-    lat: schema => schema.lat.min(1),
-    lon: schema => schema.lon.min(1),
+    lat: schema => schema.lat.min(-90).max(90),
+    lon: schema => schema.lon.min(-180).max(180),
     city: schema => schema.city.min(1).max(100),
     state: schema => schema.state.min(1).max(100),
     country: schema => schema.country.min(2).max(2),
