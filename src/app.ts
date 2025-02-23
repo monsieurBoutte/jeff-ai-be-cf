@@ -6,6 +6,7 @@ import index from "@/routes/index.route";
 import refinements from "@/routes/refinements/refinements.index";
 import tasks from "@/routes/tasks/tasks.index";
 import transcribe from "@/routes/transcribe/transcribe.index";
+import weather from "@/routes/weather/weather.index";
 
 const app = createApp();
 
@@ -18,6 +19,7 @@ const routes = [
   refinements,
   tasks,
   transcribe,
+  weather,
 ] as const;
 
 routes.forEach((route) => {

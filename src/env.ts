@@ -24,6 +24,7 @@ const EnvSchema = z.object({
   KINDE_SECRET: z.string(),
   KINDE_REDIRECT_URL: z.string(),
   KINDE_SITE_URL: z.string(),
+  OPENWEATHER_API_KEY: z.string(),
 }).superRefine((input, ctx) => {
   if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({

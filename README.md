@@ -23,7 +23,7 @@ base template started from [hono-open-api-starter](https://github.com/w3cj/hono-
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- pnpm package manager
+- [pnpm package manager](https://pnpm.io/installation)
 - [Cloudflare account](https://www.cloudflare.com/)
 - [Kinde account](https://kinde.com/)
 - [OpenAI account](https://platform.openai.com/docs/overview)
