@@ -97,10 +97,34 @@ export const refinements = sqliteTable("refinements", {
     .$onUpdate(() => new Date()),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const settings = sqliteTable("settings", {
+  id: text("id").primaryKey().$defaultFn(() => createId()),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id),
+  lat: text("lat"),
+  lon: text("lon"),
+  city: text("city"),
+  state: text("state"),
+  country: text("country"),
+  units: text("units").notNull().default("imperial"),
+  language: text("language").notNull().default("en"),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .$onUpdate(() => new Date()),
+});
+
+export const usersRelations = relations(users, ({ many, one }) => ({
   tasks: many(tasks),
   feedback: many(feedback),
   refinements: many(refinements),
+  settings: one(settings, {
+    fields: [users.id],
+    references: [settings.userId],
+  }),
 }));
 
 export const tasksRelations = relations(tasks, ({ one }) => ({
@@ -120,6 +144,13 @@ export const feedbackRelations = relations(feedback, ({ one }) => ({
 export const refinementsRelations = relations(refinements, ({ one }) => ({
   user: one(users, {
     fields: [refinements.userId],
+    references: [users.id],
+  }),
+}));
+
+export const settingsRelations = relations(settings, ({ one }) => ({
+  user: one(users, {
+    fields: [settings.userId],
     references: [users.id],
   }),
 }));
@@ -199,3 +230,28 @@ export const insertRefinementsSchema = createInsertSchema(refinements).required(
 });
 
 export const patchRefinementsSchema = insertRefinementsSchema.partial();
+
+export const selectSettingsSchema = createSelectSchema(settings);
+
+export const insertSettingsSchema = createInsertSchema(
+  settings,
+  {
+    lat: schema => schema.lat.min(1),
+    lon: schema => schema.lon.min(1),
+    city: schema => schema.city.min(1).max(100),
+    state: schema => schema.state.min(1).max(100),
+    country: schema => schema.country.min(2).max(2),
+    units: schema => schema.units.refine(val => ["standard", "metric", "imperial"].includes(val), {
+      message: "Units must be either 'standard', 'metric', or 'imperial'",
+    }),
+    language: schema => schema.language.min(2).max(2),
+  },
+).required({
+  userId: true,
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const patchSettingsSchema = insertSettingsSchema.partial();
