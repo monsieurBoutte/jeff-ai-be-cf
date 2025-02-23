@@ -1,11 +1,10 @@
 import { eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
 import type { AppRouteHandler } from "@/lib/types";
 
 import { createDb } from "@/db";
-import { settings, users } from "@/db/schema";
+import { settings } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 import type { CreateRoute, GetRoute, PatchRoute } from "./settings.routes";
